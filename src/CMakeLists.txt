@@ -1,0 +1,2 @@
+add_subdirectory(sgievallib)
+add_subdirectory(sgievalmain)
