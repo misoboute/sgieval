@@ -6,4 +6,4 @@ set(SOURCES
 
 add_executable(sgievalmain ${SOURCES})
 
-target_link_libraries(sgievallib)
+target_link_libraries(sgievalmain sgievallib)

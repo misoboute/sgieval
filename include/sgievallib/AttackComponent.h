@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Component.h"
 
 namespace sgieval
@@ -6,7 +8,11 @@ namespace sgieval
 class AttackComponent : public Component
 {
   public:
-    AttackComponent(unsigned int attackPower) : m_attackPower(attackPower)
+    AttackComponent()
+    {
+    }
+
+    AttackComponent(const AttackComponent &other) : m_attackPower(other.m_attackPower)
     {
     }
 
@@ -17,7 +23,7 @@ class AttackComponent : public Component
 
     virtual PtrT DeepCopy() const override
     {
-        return std::make_shared<AttackComponent>(m_attackPower);
+        return std::make_shared<AttackComponent>(*this);
     }
 
   private:

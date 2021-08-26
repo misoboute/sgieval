@@ -1,3 +1,5 @@
+#pragma once
+
 #include <memory>
 #include <unordered_map>
 
@@ -10,12 +12,12 @@ namespace sgieval
 
 class Entity
 {
+  public:
     using PtrT = std::shared_ptr<Entity>;
     using CPtrT = std::shared_ptr<const Entity>;
     using RectT = Rectangle2D<CoordT>;
     using ComponentMap = std::unordered_map<Component::Type, Component::PtrT>;
 
-  public:
     Entity(const RectT &boundingBox);
 
     PtrT DeepCopy() const;

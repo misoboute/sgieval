@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Component.h"
 
 namespace sgieval
@@ -6,7 +8,11 @@ namespace sgieval
 class MovementComponent : public Component
 {
   public:
-    MovementComponent(float speed) : m_speed(speed)
+    MovementComponent()
+    {
+    }
+
+    MovementComponent(const MovementComponent &other) : m_speed(other.m_speed)
     {
     }
 
@@ -17,7 +23,7 @@ class MovementComponent : public Component
 
     virtual PtrT DeepCopy() const override
     {
-        return std::make_shared<MovementComponent>(m_speed);
+        return std::make_shared<MovementComponent>(*this);
     }
 
   private:

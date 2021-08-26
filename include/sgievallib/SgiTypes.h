@@ -1,4 +1,6 @@
+#pragma once
+
 namespace sgieval
 {
-    using CoordT = float;
+using CoordT = float;
 }

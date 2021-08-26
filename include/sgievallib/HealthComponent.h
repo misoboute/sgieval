@@ -1,3 +1,5 @@
+#pragma once
+
 #include "Component.h"
 
 namespace sgieval
@@ -6,7 +8,11 @@ namespace sgieval
 class HealthComponent : public Component
 {
   public:
-    HealthComponent(int health) : m_health(health)
+    HealthComponent()
+    {
+    }
+
+    HealthComponent(const HealthComponent &other) : m_health(other.m_health)
     {
     }
 
@@ -17,7 +23,7 @@ class HealthComponent : public Component
 
     virtual PtrT DeepCopy() const override
     {
-        return std::make_shared<HealthComponent>(m_health);
+        return std::make_shared<HealthComponent>(*this);
     }
 
   private:
