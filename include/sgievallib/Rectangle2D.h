@@ -8,10 +8,18 @@ template <typename T> class Rectangle2D
 
     Rectangle2D(CoordT x, CoordT y, CoordT width, CoordT height);
 
-    bool IntersectsWith(const Rectangle2D &other);
+    CoordT GetX() const noexcept { return m_x; }
+    CoordT GetY() const noexcept { return m_y; }
+    CoordT GetHalfWidth() const noexcept { return m_halfWidth; }
+    CoordT GetHalfHeight() const noexcept { return m_halfHeight; }
+    CoordT GetWidth() const noexcept { return m_halfWidth * 2; }
+    CoordT GetHeight() const noexcept { return m_halfHeight * 2; }
+
+    bool IntersectsWith(const Rectangle2D &other) const noexcept;
 
   private:
-    bool DoIntersectAlongOneCoordinate(CoordT coord1, CoordT halfLength1, CoordT coord2, CoordT halfLength2);
+    bool DoIntersectAlongOneCoordinate(CoordT coord1, CoordT halfLength1, CoordT coord2,
+                                       CoordT halfLength2) const noexcept;
 
     CoordT m_x;
     CoordT m_y;
@@ -26,7 +34,8 @@ Rectangle2D<T>::Rectangle2D(CoordT x, CoordT y, CoordT width, CoordT height)
 }
 
 template <typename T>
-bool Rectangle2D<T>::DoIntersectAlongOneCoordinate(CoordT coord1, CoordT halfLength1, CoordT coord2, CoordT halfLength2)
+bool Rectangle2D<T>::DoIntersectAlongOneCoordinate(CoordT coord1, CoordT halfLength1, CoordT coord2,
+                                                   CoordT halfLength2) const noexcept
 {
     if (coord1 < coord2)
     {
@@ -42,7 +51,7 @@ bool Rectangle2D<T>::DoIntersectAlongOneCoordinate(CoordT coord1, CoordT halfLen
     }
 }
 
-template <typename T> bool Rectangle2D<T>::IntersectsWith(const Rectangle2D<T> &other)
+template <typename T> bool Rectangle2D<T>::IntersectsWith(const Rectangle2D<T> &other) const noexcept
 {
     auto horizontal = DoIntersectAlongOneCoordinate(m_x, m_halfWidth, other.m_x, other.m_halfWidth);
     auto vertical = DoIntersectAlongOneCoordinate(m_y, m_halfHeight, other.m_y, other.m_halfHeight);

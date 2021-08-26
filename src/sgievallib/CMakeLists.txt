@@ -1,7 +1,7 @@
 include_directories(${SGI_ROOT}/include/sgievallib)
 
 set(SOURCES 
-    Rectangle2D.cpp
+    Entity.cpp
 )
 
 add_library(sgievallib ${SOURCES})

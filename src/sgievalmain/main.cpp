@@ -3,6 +3,8 @@
 #include <iostream>
 #include <string>
 
+#include "sgievallib/Entity.h"
+
 using namespace sgieval;
 
 int main(int argc, const char *argv[])
