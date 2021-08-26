@@ -1,11 +1,13 @@
 #include <chrono>
 #include <fstream>
 #include <iostream>
+#include <limits>
 #include <string>
 #include <vector>
 
 #include "sgievallib/AttackComponent.h"
 #include "sgievallib/Entity.h"
+#include "sgievallib/EntityGrid.h"
 #include "sgievallib/HealthComponent.h"
 #include "sgievallib/MovementComponent.h"
 
@@ -37,6 +39,11 @@ int main(int argc, const char *argv[])
 
     std::vector<Entity::PtrT> entities;
 
+    float minX = std::numeric_limits<float>::infinity();
+    float maxX = std::numeric_limits<float>::lowest();
+    float minY = std::numeric_limits<float>::infinity();
+    float maxY = std::numeric_limits<float>::lowest();
+
     for (unsigned int i = 0; i < numberOfEntities; ++i)
     {
         float x = 0;
@@ -48,6 +55,23 @@ int main(int argc, const char *argv[])
         {
             std::cerr << "Error getting bounds on line " << i + 1 << ".\n";
             return 4;
+        }
+
+        if (x + width / 2 > maxX)
+        {
+            maxX = x + width / 2;
+        }
+        if (x - width / 2 < minX)
+        {
+            minX = x - width / 2;
+        }
+        if (y + height / 2 > maxY)
+        {
+            maxY = y + height / 2;
+        }
+        if (y - height / 2 < minY)
+        {
+            minY = y - height / 2;
         }
 
         Entity::RectT boundingBox(x, y, width, height);
@@ -86,30 +110,41 @@ int main(int argc, const char *argv[])
     }
     file.close();
 
+    // Primitive (unoptimized) algorithm with ~O(n^2) time complexity:
+    // const auto entitiesSize = entities.size();
+    // auto intersectionCount = 0;
+    // for (auto i = 0; i < entitiesSize; ++i)
+    // {
+    //     for (auto j = i + 1; j < entitiesSize; ++j)
+    //     {
+    //         const auto &b1 = entities[i]->GetBoundingBox();
+    //         const auto &b2 = entities[j]->GetBoundingBox();
+    //         if (entities[i]->IntersectsWith(*entities[j]))
+    //         {
+    //             ++intersectionCount;
+    //         }
+    //     }
+    // }
+    // std::cout << "Number of intersections (first algorithm): " << intersectionCount << std::endl;
+    // Number of intersections: 21589
+    // Algorithm executed in 1960ms.
+
+    // Optimized algorithm:
+
+    auto yMargin = (maxY - minY) / numberOfEntities;
+    auto xMargin = (maxX - minX) / numberOfEntities;
+
     const auto start = std::chrono::high_resolution_clock::now();
 
-    auto intersectionCount = 0;
-    const auto entitiesSize = entities.size();
-    for (auto i = 0; i < entitiesSize; ++i)
-    {
-        for (auto j = i + 1; j < entitiesSize; ++j)
-        {
-            const auto &b1 = entities[i]->GetBoundingBox();
-            const auto &b2 = entities[j]->GetBoundingBox();
-            if (b1.IntersectsWith(b2))
-            {
-                // std::cout << "Ent #" << i << " / Ent #" << j << ": (" << b1.GetX() << ", " << b1.GetY() << ", "
-                //           << b1.GetWidth() << ", " << b1.GetHeight() << ") / (" << b2.GetX() << ", " << b2.GetY()
-                //           << ", " << b2.GetWidth() << ", " << b2.GetHeight() << ")" << std::endl;
-                ++intersectionCount;
-            }
-        }
-    }
+    auto grid = EntityGrid(entities.size(), minX - xMargin, maxX + xMargin, minY - yMargin, maxY + yMargin);
+    grid.ImportEntites(entities);
+    auto intersectionCount = grid.CountIntersections();
     std::cout << "Number of intersections: " << intersectionCount << std::endl;
 
     const auto end = std::chrono::high_resolution_clock::now();
     const auto runMS = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
 
-    std::cout << "Algorithm executed in " << runMS.count() << "ms.\n";
+    std::cout << "Algorithm executed in " << runMS.count() << "ms.\n" << std::endl;
+
     return 0;
 }

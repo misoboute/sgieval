@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <set>
 #include <unordered_map>
 
 #include "Component.h"
@@ -17,11 +18,15 @@ class Entity
     using CPtrT = std::shared_ptr<const Entity>;
     using RectT = Rectangle2D<CoordT>;
     using ComponentMap = std::unordered_map<Component::Type, Component::PtrT>;
+    using TimestampT = std::uintmax_t;
 
     Entity(const RectT &boundingBox);
 
     PtrT DeepCopy() const;
 
+    TimestampT GetTimestamp() const noexcept;
+
+    bool IntersectsWith(const Entity &other) const noexcept;
     const RectT &GetBoundingBox() const noexcept;
     void SetBoundingBox(const RectT &box);
 
@@ -31,6 +36,11 @@ class Entity
     Component::CPtrT GetComponent(Component::Type type) const;
 
   private:
+    static TimestampT GenerateTimeStamp();
+
+    static TimestampT m_lastTimestamp;
+
+    const TimestampT Timestamp;
     RectT m_boundingBox;
     ComponentMap m_components;
 };

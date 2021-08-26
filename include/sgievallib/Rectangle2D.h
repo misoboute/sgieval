@@ -1,5 +1,7 @@
 #pragma once
 
+#include <iostream>
+
 namespace sgieval
 {
 
@@ -43,6 +45,26 @@ template <typename T> class Rectangle2D
         return m_halfHeight * 2;
     }
 
+    CoordT GetLeft() const noexcept
+    {
+        return m_x - m_halfWidth;
+    }
+
+    CoordT GetRight() const noexcept
+    {
+        return m_x + m_halfWidth;
+    }
+
+    CoordT GetTop() const noexcept
+    {
+        return m_y + m_halfHeight;
+    }
+
+    CoordT GetBottom() const noexcept
+    {
+        return m_y - m_halfHeight;
+    }
+
     bool IntersectsWith(const Rectangle2D &other) const noexcept;
 
   private:
@@ -78,6 +100,13 @@ template <typename T> bool Rectangle2D<T>::IntersectsWith(const Rectangle2D<T> &
     auto horizontal = DoIntersectAlongOneCoordinate(m_x, m_halfWidth, other.m_x, other.m_halfWidth);
     auto vertical = DoIntersectAlongOneCoordinate(m_y, m_halfHeight, other.m_y, other.m_halfHeight);
     return horizontal && vertical;
+}
+
+template <class T> std::ostream &operator<<(std::ostream &os, const Rectangle2D<T> &rec)
+{
+    os << "Rectangle2D(" << rec.GetX() << ", " << rec.GetY() << ", " << rec.GetWidth() << ", " << rec.GetHeight()
+       << ")";
+    return os;
 }
 
 } // namespace sgieval

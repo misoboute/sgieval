@@ -2,7 +2,14 @@
 
 using namespace sgieval;
 
-Entity::Entity(const RectT &boundingBox) : m_boundingBox(boundingBox)
+Entity::TimestampT Entity::m_lastTimestamp = 0;
+
+Entity::TimestampT Entity::GenerateTimeStamp()
+{
+    return ++m_lastTimestamp;
+}
+
+Entity::Entity(const RectT &boundingBox) : Timestamp(GenerateTimeStamp()), m_boundingBox(boundingBox)
 {
 }
 
@@ -14,6 +21,16 @@ Entity::PtrT Entity::DeepCopy() const
         copy->AddComponent(comp.second->DeepCopy());
     }
     return copy;
+}
+
+Entity::TimestampT Entity::GetTimestamp() const noexcept
+{
+    return Timestamp;
+}
+
+bool Entity::IntersectsWith(const Entity &other) const noexcept
+{
+    return m_boundingBox.IntersectsWith(other.m_boundingBox);
 }
 
 const Entity::RectT &Entity::GetBoundingBox() const noexcept
