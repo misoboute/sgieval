@@ -13,22 +13,21 @@ The project build system is based on CMake 3.15, and the unit tests are created 
 To build the project without tests, generate the project with:
 ```sh
 $ cd sgieval
-$ cmake -DENABLE_TESTING=false -B./build
+$ cmake -DCMAKE_BUILD_TYPE=Release -DBUILD_TESTING=false -B./build
 ```
 
 To build the project with the tests, generate the project with:
 ```sh
 $ cd sgieval
-$ cmake -D-DGTest_DIR=/path/to/where/GTestConfig.cmake/is/located -B./build
+$ cmake -DCMAKE_BUILD_TYPE=Release -DGTest_DIR=/path/to/where/GTestConfig.cmake/is/located -B./build
 ```
 or
 ```sh
 $ cd sgieval
-$ cmake -D-DCMAKE_PREFIX_PATH=/GoogleTest/framework/install/root -B./build
+$ cmake -DCMAKE_BUILD_TYPE=Release -DCMAKE_PREFIX_PATH=/GoogleTest/framework/install/root -B./build
 ```
 
 If the Google Test framework is installed to a defaul install prefix where CMake can find it, you can simply generate with:
-
 ```sh
 $ cd sgieval
 $ cmake -B./build
